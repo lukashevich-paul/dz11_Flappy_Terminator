@@ -1,8 +1,6 @@
 using System.Collections;
 using UnityEngine;
 using Random = UnityEngine.Random;
-using System.Collections.Generic;
-using UnityEngine.Audio;
 
 [RequireComponent(typeof(EnemySpawnerPool))]
 [RequireComponent(typeof(EnemyRocketSpawnerPool))]
@@ -66,5 +64,10 @@ public class EnemySpawn : MonoBehaviour
 
             yield return _wait;
         }
+
+        if (_coroutine != null)
+            StopCoroutine(_coroutine);
+
+        yield return null;
     }
 }

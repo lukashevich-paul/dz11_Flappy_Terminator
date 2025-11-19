@@ -45,6 +45,7 @@ public class PlayerRocketSpawner : BasicSpawnerPool<PlayerRocket>
         StopCoroutine(_coroutine);
         _coroutine = null;
     }
+
     protected override void GetFromPool(PlayerRocket item)
     {
         _shoot.PlayOneShot(_shoot.clip, 0.5f);

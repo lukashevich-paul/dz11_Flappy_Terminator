@@ -1,6 +1,5 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -32,7 +31,7 @@ public class Enemy : MonoBehaviour, IPoolMember<Enemy>
 
     private void FixedUpdate()
     {
-          _rigidbody2D.velocity = Vector2.left * _currentSpeed;
+        _rigidbody2D.velocity = Vector2.left * _currentSpeed;
     }
 
     public void Initialize(Transform newTransform)
@@ -87,6 +86,7 @@ public class Enemy : MonoBehaviour, IPoolMember<Enemy>
             yield return wait;
         }
 
+        StopCoroutine(_coroutine);
         yield return null;
         FrontalAttack();
     }

@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-public class EnemySpawnerPool : BasicSpawnerPool<Enemy> 
+public class EnemySpawnerPool : BasicSpawnerPool<Enemy>
 {
     public event Action<Transform> Shoot;
 

@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Audio;
 
@@ -22,7 +21,8 @@ public class Game : MonoBehaviour
     {
         _coroutine = StartCoroutine(Timer());
 
-        if (_audioMixerGroup.audioMixer.GetFloat(_audioMixerGroup.name,out float previousVolume)) {
+        if (_audioMixerGroup.audioMixer.GetFloat(_audioMixerGroup.name, out float previousVolume))
+        {
             _previousVolume = previousVolume;
         }
 
@@ -68,9 +68,10 @@ public class Game : MonoBehaviour
 
         while (enabled)
         {
-            yield return wait;
             _scoreCounter.Add();
+            yield return wait;
         }
 
+        yield return null;
     }
 }

@@ -64,7 +64,7 @@ public class BasicSpawnerPool<T> : MonoBehaviour where T : MonoBehaviour, IPoolM
     {
         foreach (T item in GameObject.FindObjectsOfType<T>())
         {
-            if (item.gameObject.activeInHierarchy)
+            if (item.enabled && item.gameObject.activeInHierarchy)
                 Pool.Release(item);
         }
     }
