@@ -379,6 +379,7 @@ MonoBehaviour:
   _maxRocketCount: 5
   _secondForShoot: 1
   _bulletSpawner: {fileID: 7606749981901999488}
+  _enemyRocketSpawnerPool: {fileID: 0}
 --- !u!50 &-8680035391180900159
 Rigidbody2D:
   serializedVersion: 4

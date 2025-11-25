@@ -59,9 +59,10 @@ public class Enemy : MonoBehaviour, IPoolMember<Enemy>
         }
     }
 
-    public void Initialize(Transform newTransform, EnemyRocketSpawnerPool enemyRocketSpawnerPool)
+    public void Initialize(Transform newTransform, EnemyRocketSpawnerPool enemyRocketSpawnerPool = null)
     {
         Initialize(newTransform);
+
         _enemyRocketSpawnerPool = enemyRocketSpawnerPool;
     }
 

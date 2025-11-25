@@ -8,11 +8,11 @@ public class BasicSpawnerPool<T> : MonoBehaviour where T : MonoBehaviour, IPoolM
     [SerializeField] protected PlayerMover PlayerMover;
 
     protected ObjectPool<T> Pool;
-    protected List<T> _activeItems;
+    protected List<T> ActiveItems;
 
     protected void Awake()
     {
-        _activeItems = new List<T>();
+        ActiveItems = new List<T>();
 
         Pool = new ObjectPool<T>(
             createFunc: InstantiateItem,
@@ -51,7 +51,7 @@ public class BasicSpawnerPool<T> : MonoBehaviour where T : MonoBehaviour, IPoolM
     protected virtual void GetFromPool(T item)
     {
         item.gameObject.SetActive(true);
-        _activeItems.Add(item);
+        ActiveItems.Add(item);
     }
 
     protected virtual void ReleaseItem(T item)
@@ -67,14 +67,14 @@ public class BasicSpawnerPool<T> : MonoBehaviour where T : MonoBehaviour, IPoolM
 
     protected virtual void ResetPool()
     {
-        for (int i = _activeItems.Count - 1; i > 0; i--)
+        for (int i = ActiveItems.Count - 1; i > 0; i--)
         {
-            T item = _activeItems[i];
+            T item = ActiveItems[i];
 
             if (item.gameObject.activeSelf)
             {
                 Pool.Release(item);
-                _activeItems.Remove(item);
+                ActiveItems.Remove(item);
             }
         }
     }

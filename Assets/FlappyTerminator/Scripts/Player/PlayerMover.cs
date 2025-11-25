@@ -41,12 +41,6 @@ public class PlayerMover : MonoBehaviour
         _inputHandler.Reset -= Reset;
     }
 
-    private void Fly()
-    {
-        _rigidbody2D.velocity = new Vector2(0f, _tapForce);
-        transform.rotation = _maxRotation;
-    }
-
     private void Update()
     {
         transform.rotation = Quaternion.Lerp(transform.rotation, _minRotation, _rotationSpeed * Time.deltaTime);
@@ -59,5 +53,11 @@ public class PlayerMover : MonoBehaviour
         transform.position = _startPosition;
         transform.rotation = Quaternion.identity;
         _rigidbody2D.velocity = Vector2.zero;
+    }
+
+    private void Fly()
+    {
+        _rigidbody2D.velocity = new Vector2(0f, _tapForce);
+        transform.rotation = _maxRotation;
     }
 }

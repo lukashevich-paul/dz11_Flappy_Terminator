@@ -28,6 +28,20 @@ public class PlayerRocketSpawner : BasicSpawnerPool<PlayerRocket>
         _gun.IsShoot -= Shoot;
     }
 
+    protected override void GetFromPool(PlayerRocket item)
+    {
+        _shoot.PlayOneShot(_shoot.clip, 0.5f);
+        base.GetFromPool(item);
+    }
+
+    protected override void ReleaseItem(PlayerRocket item)
+    {
+        _explosion.PlayOneShot(_shoot.clip);
+        item.NeedReleaseItem -= Pool.Release;
+
+        base.ReleaseItem(item);
+    }
+
     private void Shoot(Gun gun)
     {
         if (_coroutine == null)
@@ -44,19 +58,5 @@ public class PlayerRocketSpawner : BasicSpawnerPool<PlayerRocket>
 
         StopCoroutine(_coroutine);
         _coroutine = null;
-    }
-
-    protected override void GetFromPool(PlayerRocket item)
-    {
-        _shoot.PlayOneShot(_shoot.clip, 0.5f);
-        base.GetFromPool(item);
-    }
-
-    protected override void ReleaseItem(PlayerRocket item)
-    {
-        _explosion.PlayOneShot(_shoot.clip);
-        item.NeedReleaseItem -= Pool.Release;
-
-        base.ReleaseItem(item);
     }
 }
