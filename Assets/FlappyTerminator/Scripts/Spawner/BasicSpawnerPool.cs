@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Pool;
 
@@ -7,9 +8,12 @@ public class BasicSpawnerPool<T> : MonoBehaviour where T : MonoBehaviour, IPoolM
     [SerializeField] protected PlayerMover PlayerMover;
 
     protected ObjectPool<T> Pool;
+    protected List<T> _activeItems;
 
     protected void Awake()
     {
+        _activeItems = new List<T>();
+
         Pool = new ObjectPool<T>(
             createFunc: InstantiateItem,
             actionOnGet: GetFromPool,
@@ -28,7 +32,7 @@ public class BasicSpawnerPool<T> : MonoBehaviour where T : MonoBehaviour, IPoolM
         PlayerMover.Restart -= ResetPool;
     }
 
-    public virtual void GetItem(Transform newTransform)
+    public virtual void Spawn(Transform newTransform)
     {
         T item = Pool.Get();
         item.gameObject.SetActive(true);
@@ -47,6 +51,7 @@ public class BasicSpawnerPool<T> : MonoBehaviour where T : MonoBehaviour, IPoolM
     protected virtual void GetFromPool(T item)
     {
         item.gameObject.SetActive(true);
+        _activeItems.Add(item);
     }
 
     protected virtual void ReleaseItem(T item)
@@ -62,10 +67,15 @@ public class BasicSpawnerPool<T> : MonoBehaviour where T : MonoBehaviour, IPoolM
 
     protected virtual void ResetPool()
     {
-        foreach (T item in GameObject.FindObjectsOfType<T>())
+        for (int i = _activeItems.Count - 1; i > 0; i--)
         {
-            if (item.enabled && item.gameObject.activeInHierarchy)
+            T item = _activeItems[i];
+
+            if (item.gameObject.activeSelf)
+            {
                 Pool.Release(item);
+                _activeItems.Remove(item);
+            }
         }
     }
 }

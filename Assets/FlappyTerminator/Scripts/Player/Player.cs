@@ -6,7 +6,7 @@ public class Player : MonoBehaviour
 {
     private Collider2D _collider2D;
 
-    public event Action GameOver;
+    public event Action Died;
 
     private void Awake()
     {
@@ -18,7 +18,7 @@ public class Player : MonoBehaviour
     {
         if (collision.gameObject.TryGetComponent<Damager>(out Damager damager))
         {
-            GameOver?.Invoke();
+            Died?.Invoke();
         }
     }
 
@@ -26,7 +26,7 @@ public class Player : MonoBehaviour
     {
         if (collider.gameObject.TryGetComponent<Damager>(out _))
         {
-            GameOver?.Invoke();
+            Died?.Invoke();
         }
     }
 }

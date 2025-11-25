@@ -1,30 +1,71 @@
-using System;
+using System.Collections;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class EnemySpawnerPool : BasicSpawnerPool<Enemy>
 {
-    public event Action<Transform> Shoot;
+    [SerializeField] private float _radius;
+    [SerializeField][Min(1)] private int _maxSpawnCount;
+    [SerializeField] private float _spawnTime;
+    [SerializeField] private EnemyRocketSpawnerPool _enemyRocketSpawnerPool;
 
-    public override void GetItem(Transform newTransform)
+    private Coroutine _coroutine;
+    private WaitForSeconds _wait;
+
+    private void Start()
     {
-        Enemy item = Pool.Get();
-        item.gameObject.SetActive(true);
-        item.Initialize(newTransform);
+        _wait = new WaitForSeconds(_spawnTime);
 
-        item.IsShoot += NeedShoot;
-        item.NeedReleaseItem += Pool.Release;
+        _coroutine = StartCoroutine(SpawnEnemy());
     }
 
-    protected override void ReleaseItem(Enemy item)
+    private new void OnDisable()
     {
-        item.IsShoot -= NeedShoot;
-        item.NeedReleaseItem -= Pool.Release;
+        base.OnDisable();
 
-        item.gameObject.SetActive(false);
+        if (_coroutine != null)
+        {
+            StopCoroutine(_coroutine);
+        }
     }
 
-    private void NeedShoot(Transform newTransform)
+    public override void Spawn(Transform newTransform)
     {
-        Shoot?.Invoke(newTransform);
+        Enemy enemy = Pool.Get();
+        enemy.gameObject.SetActive(true);
+        enemy.Initialize(newTransform, _enemyRocketSpawnerPool);
+
+        enemy.NeedReleaseItem += Pool.Release;
+    }
+
+    protected override void ReleaseItem(Enemy enemy)
+    {
+        enemy.NeedReleaseItem -= Pool.Release;
+
+        enemy.gameObject.SetActive(false);
+    }
+
+    private IEnumerator SpawnEnemy()
+    {
+        while (enabled)
+        {
+            for (int i = 0; i < Random.Range(1, _maxSpawnCount + 1); i++)
+            {
+                Transform newTransform = transform;
+                Vector2 newPosition = newTransform.position;
+
+                newPosition.y = Random.Range(-_radius, _radius);
+                newTransform.position = newPosition;
+
+                Spawn(newTransform);
+            }
+
+            yield return _wait;
+        }
+
+        if (_coroutine != null)
+            StopCoroutine(_coroutine);
+
+        yield return null;
     }
 }

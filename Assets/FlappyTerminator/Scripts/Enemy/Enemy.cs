@@ -12,6 +12,7 @@ public class Enemy : MonoBehaviour, IPoolMember<Enemy>
     [SerializeField] private float _secondForShoot = 1f;
     [SerializeField] private Transform _bulletSpawner;
 
+    private EnemyRocketSpawnerPool _enemyRocketSpawnerPool;
     private Rigidbody2D _rigidbody2D;
     private AudioSource _audioSource;
     private int _rocketCount = 0;
@@ -21,7 +22,6 @@ public class Enemy : MonoBehaviour, IPoolMember<Enemy>
     private Coroutine _coroutine;
 
     public event Action<Enemy> NeedReleaseItem;
-    public event Action<Transform> IsShoot;
 
     private void Awake()
     {
@@ -34,13 +34,6 @@ public class Enemy : MonoBehaviour, IPoolMember<Enemy>
         _rigidbody2D.velocity = Vector2.left * _currentSpeed;
     }
 
-    public void Initialize(Transform newTransform)
-    {
-        transform.position = newTransform.position;
-        _currentSpeed = _speed;
-        _audioSource.pitch = Random.Range(_minPich, _maxPich);
-    }
-
     private void OnTriggerEnter2D(Collider2D collider)
     {
         if (collider.gameObject.TryGetComponent<FireZone>(out _))
@@ -48,7 +41,8 @@ public class Enemy : MonoBehaviour, IPoolMember<Enemy>
             _rocketCount = Random.Range(1, _maxRocketCount + 1);
             Hang();
 
-            _coroutine = StartCoroutine(Shoot());
+            if (gameObject.activeSelf)
+                _coroutine = StartCoroutine(Shoot());
         }
 
         if (collider.gameObject.TryGetComponent<PlayerRocket>(out _))
@@ -63,6 +57,19 @@ public class Enemy : MonoBehaviour, IPoolMember<Enemy>
         {
             NeedReleaseItem?.Invoke(this);
         }
+    }
+
+    public void Initialize(Transform newTransform, EnemyRocketSpawnerPool enemyRocketSpawnerPool)
+    {
+        Initialize(newTransform);
+        _enemyRocketSpawnerPool = enemyRocketSpawnerPool;
+    }
+
+    private void Initialize(Transform newTransform)
+    {
+        transform.position = newTransform.position;
+        _currentSpeed = _speed;
+        _audioSource.pitch = Random.Range(_minPich, _maxPich);
     }
 
     private void Hang()
@@ -82,7 +89,7 @@ public class Enemy : MonoBehaviour, IPoolMember<Enemy>
         while (gameObject.activeSelf && _rocketCount > 0)
         {
             _rocketCount--;
-            IsShoot?.Invoke(_bulletSpawner.transform);
+            _enemyRocketSpawnerPool.Spawn(_bulletSpawner.transform);
             yield return wait;
         }
 

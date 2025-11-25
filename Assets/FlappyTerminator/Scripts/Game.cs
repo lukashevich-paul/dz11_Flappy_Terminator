@@ -16,6 +16,9 @@ public class Game : MonoBehaviour
 
     private Coroutine _coroutine;
     private float _previousVolume;
+    private bool _isPaused;
+
+    public bool IsPaused => _isPaused;
 
     private void Start()
     {
@@ -32,17 +35,18 @@ public class Game : MonoBehaviour
     private void OnEnable()
     {
         _playerMover.Restart += StartTime;
-        _player.GameOver += StopTime;
+        _player.Died += StopTime;
     }
 
     private void OnDisable()
     {
         _playerMover.Restart -= StartTime;
-        _player.GameOver -= StopTime;
+        _player.Died -= StopTime;
     }
 
     private void StartTime()
     {
+        _isPaused = false;
         _scorePanel.Hide(); ;
         Time.timeScale = 1.0f;
         _audioMixerGroup.audioMixer.SetFloat(_audioMixerGroup.name, _previousVolume);
@@ -55,6 +59,7 @@ public class Game : MonoBehaviour
 
     private void StopTime()
     {
+        _isPaused = true;
         _scorePanel.Show();
 
         Time.timeScale = 0.0f;
