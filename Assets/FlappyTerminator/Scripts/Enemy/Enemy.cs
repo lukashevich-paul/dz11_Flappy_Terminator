@@ -65,7 +65,7 @@ public class Enemy : MonoBehaviour, IPoolMember<Enemy>
         _enemyRocketSpawnerPool = enemyRocketSpawnerPool;
     }
 
-    private void Initialize(Transform newTransform)
+    public void Initialize(Transform newTransform)
     {
         transform.position = newTransform.position;
         _currentSpeed = _speed;
