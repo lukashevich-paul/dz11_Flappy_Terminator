@@ -33,7 +33,7 @@ public class EnemySpawnerPool : BasicSpawnerPool<Enemy>
     {
         Enemy enemy = Pool.Get();
         enemy.gameObject.SetActive(true);
-        enemy.Initialize(newTransform, _enemyRocketSpawnerPool);
+        enemy.InitializeEnemy(newTransform, _enemyRocketSpawnerPool);
 
         enemy.NeedReleaseItem += Pool.Release;
     }

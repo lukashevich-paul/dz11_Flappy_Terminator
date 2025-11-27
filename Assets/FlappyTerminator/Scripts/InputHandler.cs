@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class InputHandler : MonoBehaviour
 {
@@ -21,6 +22,8 @@ public class InputHandler : MonoBehaviour
     {
         if (_game.IsPaused == false)
         {
+            EventSystem.current.SetSelectedGameObject(null);
+
             if (Input.GetKeyDown(FlyButton) || Input.GetMouseButtonDown(MouseFlyButton))
             {
                 Fly?.Invoke();
